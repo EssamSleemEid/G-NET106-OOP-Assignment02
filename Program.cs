@@ -67,7 +67,7 @@
                     }
                 }
             }
-            public decimal EstimatedCost
+            public virtual decimal EstimatedCost
             {
                 get { return DeliveryFee + (decimal)(Weight * 5); }
             }
@@ -298,8 +298,98 @@
 
             #region Part02
 
+            Console.Write("Center Name: ");
+            string Centername01 = Console.ReadLine();
+
+            DeliveryCenter center = new DeliveryCenter(Centername01);
+
+            for (int i = 1; i <= 3; i++)
+            {
+                Console.WriteLine($"Enter Shipment {i} Data");
+
+                Console.Write("Tracking Code: ");
+                string trackingCode = Console.ReadLine();
+
+                Console.Write("Description: ");
+                string description = Console.ReadLine();
+
+                Console.Write("Weight: ");
+                double weight = double.Parse(Console.ReadLine());
+
+                Console.Write("Delivery Fee: ");
+                decimal deliveryFee = decimal.Parse(Console.ReadLine());
+
+                Console.Write("City: ");
+                string city = Console.ReadLine();
+
+                Console.Write("Street: ");
+                string street = Console.ReadLine();
+
+                Console.Write("Building Number: ");
+                int buildingNumber = int.Parse(Console.ReadLine());
+
+                DeliveryAddress address =
+                    new DeliveryAddress(city, street, buildingNumber);
+
+                Shipment shipment;
+
+                if (i == 1){
+                    shipment = new StandardShipment(description, weight, deliveryFee, trackingCode,address);
+                }
+                else if (i == 2){
+                    Console.Write("Extra Fee: ");
+                    decimal extraFee = decimal.Parse(Console.ReadLine());
+
+                    shipment = new ExpressShipment(description, weight, deliveryFee, trackingCode,address,extraFee);
+                }
+                else
+                {
+                    Console.Write("Destination Country: ");
+                    string country = Console.ReadLine();
+
+                    Console.Write("Customs Fee: ");
+                    decimal customsFee = decimal.Parse(Console.ReadLine());
+
+                    shipment = new InternationalShipment(description, weight, deliveryFee,trackingCode,address,country,customsFee);
+                }
+
+                center.AddShipment(shipment);
+            }
+
+            center.PrintAllShipments();
+
+            Console.Write("enter track code to search : ");
+            string searchCode = Console.ReadLine();
+
+            Shipment found = center[searchCode];
+
+            if (found != null)
+            {
+                found.PrintShipment();
+            }
+            else
+            {
+                Console.WriteLine("not found.");
+            }
+
+            Console.Write("enter  track code to remove : ");
+            string removeCode = Console.ReadLine();
+
+            if (center.RemoveShipment(removeCode))
+            {
+                Console.WriteLine("Shipment removed successfully.");
+            }
+            else
+            {
+                Console.WriteLine("Shipment not found.");
+            }
+
+            Console.WriteLine("after deleting : ");
+
+            center.PrintAllShipments();
 
             #endregion
+
             #endregion
         }
     }
