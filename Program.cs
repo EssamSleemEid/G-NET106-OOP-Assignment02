@@ -181,11 +181,13 @@
 
             public class DeliveryCenter
         {
+            public string CenterName { get; set; }
             private Shipment[] shipments;
 
-            public DeliveryCenter()
+            public DeliveryCenter(string centerName)
             {
-                shipments = new Shipment[10];
+                CenterName = centerName;
+                shipments = new Shipment[20];
             }
 
             public Shipment this[int index]
@@ -232,6 +234,32 @@
 
                 return false;
             }
+
+            public bool RemoveShipment(string trackingCode)
+            {
+                for (int i = 0; i < shipments.Length; i++)
+                {
+                    if (shipments[i] != null && shipments[i].TrackingCode == trackingCode)
+                    {
+                        shipments[i] = null;
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            public void PrintAllShipments()
+            {
+                for (int i = 0; i < shipments.Length; i++)
+                {
+                    if (shipments[i] != null)
+                    {
+                        shipments[i].PrintShipment();
+                        Console.WriteLine();
+                    }
+                }
+            }
+
         }
 
 
