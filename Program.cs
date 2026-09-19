@@ -106,7 +106,80 @@
             }
         }
 
-        public class DeliveryCenter
+        public class StandardShipment : Shipment
+        {
+            public StandardShipment(string description, double weight, decimal deliveryFee, string trackingCode, DeliveryAddress Destination) : base(trackingCode, description, weight, deliveryFee, Destination)
+            {
+            }
+        }
+
+        public class ExpressShipment : Shipment
+        {
+            private decimal ExtraFee;
+
+            public decimal extrafee
+            {
+                get {return ExtraFee; }
+
+                set{ if(value >= 0)
+                    {
+                        ExtraFee = value;
+                    }
+                }
+            }
+
+            public override decimal EstimatedCost
+            {
+                get{return DeliveryFee + (decimal)(Weight * 5) + ExtraFee;}
+            }
+
+            public ExpressShipment(string description, double weight, decimal deliveryFee, string trackingCode, DeliveryAddress Destination, decimal ExtraFee) : base(trackingCode, description, weight, deliveryFee, Destination)
+            {
+                extrafee= ExtraFee;
+            }
+        }
+
+        public class InternationalShipment : Shipment
+        {
+            private string DestinationCountry;
+            private decimal CustomerFee;
+
+            public string destinationCountry
+            {
+                get { return DestinationCountry; }
+
+                set{
+                    if (!string.IsNullOrWhiteSpace(value))
+                    {
+                        DestinationCountry = value;
+                    }
+                }
+            }
+
+            public decimal customerFee
+            {
+                get { return CustomerFee; }
+
+                set{
+                    if (value >= 0) {
+                        CustomerFee= value;
+                    }
+                }
+            }
+
+            public override decimal EstimatedCost
+            {
+                get { return DeliveryFee + (decimal)(Weight * 5) + customerFee; }
+            }
+
+            public InternationalShipment(string description, double weight, decimal deliveryFee, string trackingCode, DeliveryAddress Destination, string DestinationCountry, decimal CustomerFee) : base(trackingCode, description, weight, deliveryFee, Destination)
+            {
+                destinationCountry= DestinationCountry;
+                customerFee= CustomerFee;
+            }
+        }
+
+            public class DeliveryCenter
         {
             private Shipment[] shipments;
 
